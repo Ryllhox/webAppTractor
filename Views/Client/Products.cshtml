@@ -1,0 +1,20 @@
+﻿@model List<Product>
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<h2>Продукты в @ViewBag.CategoryName</h2>
+<ul>
+    @foreach (var product in Model)
+    {
+        <li>
+            <strong>@product.Name</strong><br />
+            Price: @product.Price<br />
+            Power: @product.Power<br />
+            Availability: @product.Availability
+            <br /><br />
+            <a asp-action="Details" asp-controller="Client" asp-route-id="@product.Id">Детали</a>
+        </li>
+    }
+</ul>

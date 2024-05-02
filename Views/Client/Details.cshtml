@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "Product Details";
+}
+
+<h2>@ViewBag.ProductName</h2>
+<p>Price: @ViewBag.ProductPrice</p>
+
+<h3>Additional Options</h3>
+<form id="orderForm" asp-action="Order" asp-controller="Client">
+    <input type="hidden" name="productId" value="@ViewBag.ProductId" />
+    <select name="optionIds" multiple>
+        @foreach (var option in ViewBag.ProductOptions)
+        {
+            <option value="@option.Id" data-price="@option.Price">@option.Name - @option.Price</option>
+        }
+    </select>
+    <br /><br />
+    <p>Total Price: <span id="totalPrice">@ViewBag.ProductPrice</span></p>
+    <input type="submit" value="Order" />
+</form>
+
+@section Scripts
+{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('select[name="optionIds"]').change(function () {
+                var totalPrice = parseFloat('@ViewBag.ProductPrice');
+                $('select[name="optionIds"] option:selected').each(function () {
+                    var optionPrice = parseFloat($(this).data('price'));
+                    totalPrice += optionPrice;
+                });
+                $('#totalPrice').text(totalPrice.toFixed(2));
+            });
+
+            $('#orderForm').submit(function () {
+                var totalPrice = parseFloat('@ViewBag.ProductPrice');
+                $('select[name="optionIds"] option:selected').each(function () {
+                    var optionPrice = parseFloat($(this).data('price'));
+                    totalPrice += optionPrice;
+                });
+                $('input[name="totalPrice"]').val(totalPrice.toFixed(2));
+            });
+        });
+    </script>
+}
