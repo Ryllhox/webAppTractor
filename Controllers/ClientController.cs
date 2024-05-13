@@ -29,8 +29,10 @@ namespace WebApplication2.Controllers
             }
 
             var products = _context.Products.Where(p => p.CategoryId == categoryId).ToList();
+            ViewBag.CategoryName = category.Name; // Передаем название категории в представление
             return View(products);
         }
+
 
         public IActionResult Details(int id)
         {

@@ -9,6 +9,10 @@
     @foreach (var product in Model)
     {
         <li>
+            @if (!string.IsNullOrEmpty(product.ImagePath))
+            {
+                <img src="@Url.Content($"{product.ImagePath}")" alt="@product.Name" width="100" />
+            }
             <strong>@product.Name</strong><br />
             Price: @product.Price<br />
             Power: @product.Power<br />

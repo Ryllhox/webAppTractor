@@ -83,5 +83,13 @@ namespace WebApplication2.Controllers
             // Регистрация успешна, перенаправляем пользователя на страницу входа
             return RedirectToAction("Login");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync("Cookies");
+            return RedirectToAction("Index", "Home");
+        }
+
     }
 }

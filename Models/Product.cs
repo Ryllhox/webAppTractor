@@ -8,6 +8,6 @@
         public decimal Price { get; set; }
         public int Power { get; set; }
         public bool Availability { get; set; }
-        public string Image { get; set; }
+        public string? ImagePath { get; set; }
     }
 }

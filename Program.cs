@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WebApplication2.Models;
@@ -32,6 +33,9 @@ namespace WebApplication2
                 options.AddPolicy("ManagerPolicy", policy => policy.RequireRole("Manager"));
                 options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
             });
+
+            //builder.Services.Configure<FormOptions>(options =>
+            //{ options.MultipartBodyLengthLimit = 60000000; });
 
             var app = builder.Build();
 
