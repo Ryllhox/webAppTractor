@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Security.Claims;
+using WebApplication2.Controllers;
 using WebApplication2.Models;
 namespace WebApplication2
 {
@@ -34,9 +37,6 @@ namespace WebApplication2
                 options.AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
             });
 
-            //builder.Services.Configure<FormOptions>(options =>
-            //{ options.MultipartBodyLengthLimit = 60000000; });
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -58,6 +58,43 @@ namespace WebApplication2
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.Use(async (context, next) =>
+            {
+                if (!context.User.Identity.IsAuthenticated && context.Request.Path == "/")
+                {
+                    context.Response.Redirect("/Account/Login");
+                    return;
+                }
+
+                if (context.User.Identity.IsAuthenticated && context.Request.Path == "/")
+                {
+                    var role = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+
+                    if (!string.IsNullOrEmpty(role))
+                    {
+                        switch (role.ToLower())
+                        {
+                            case "client":
+                                context.Response.Redirect("/Client");
+                                break;
+                            case "manager":
+                                context.Response.Redirect("/Manager");
+                                break;
+                            case "administrator":
+                                context.Response.Redirect("/Admin");
+                                break;
+                            default:
+                                context.Response.Redirect("/Home");
+                                break;
+                        }
+
+                        return;
+                    }
+                }
+
+                await next();
+            });
 
             app.MapControllerRoute(
                 name: "default",

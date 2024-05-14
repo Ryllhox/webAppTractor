@@ -4,6 +4,42 @@
     ViewData["Title"] = "Products";
 }
 
+<div class="row mb-4">
+    <div class="col-md-12">
+        <form method="get" action="@Url.Action("Products", "Client")">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="minPrice">Min Price:</label>
+                        <input type="number" class="form-control" name="minPrice" id="minPrice" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="maxPrice">Max Price:</label>
+                        <input type="number" class="form-control" name="maxPrice" id="maxPrice" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="minPower">Min Power:</label>
+                        <input type="number" class="form-control" name="minPower" id="minPower" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="maxPower">Max Power:</label>
+                        <input type="number" class="form-control" name="maxPower" id="maxPower" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="row">
     @foreach (var product in Model)
     {

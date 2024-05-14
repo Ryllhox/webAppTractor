@@ -17,6 +17,10 @@ namespace WebApplication2.Controllers
             _context = context;
             _webHostEnvironment = webHostEnvironment;
         }
+        public IActionResult Index()
+        {
+            return View();
+        }
 
         // Страница со списком пользователей
         public IActionResult Users()

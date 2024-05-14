@@ -20,7 +20,7 @@ namespace WebApplication2.Controllers
             return View(categories);
         }
 
-        public IActionResult Products(int categoryId)
+        public IActionResult Products(int categoryId, decimal? minPrice, decimal? maxPrice, int? minPower, int? maxPower)
         {
             var category = _context.Categories.FirstOrDefault(c => c.Id == categoryId);
             if (category == null)
@@ -28,10 +28,33 @@ namespace WebApplication2.Controllers
                 return NotFound();
             }
 
-            var products = _context.Products.Where(p => p.CategoryId == categoryId).ToList();
-            ViewBag.CategoryName = category.Name; // Передаем название категории в представление
-            return View(products);
+            // Фильтрация продуктов по категории
+            var products = _context.Products.Where(p => p.CategoryId == categoryId);
+
+            // Фильтрация по цене
+            if (minPrice.HasValue)
+            {
+                products = products.Where(p => p.Price >= minPrice);
+            }
+            if (maxPrice.HasValue)
+            {
+                products = products.Where(p => p.Price <= maxPrice);
+            }
+
+            // Фильтрация по мощности
+            if (minPower.HasValue)
+            {
+                products = products.Where(p => p.Power >= minPower);
+            }
+            if (maxPower.HasValue)
+            {
+                products = products.Where(p => p.Power <= maxPower);
+            }
+
+            ViewBag.CategoryName = category.Name;
+            return View(products.ToList());
         }
+
 
 
         public IActionResult Details(int id)
