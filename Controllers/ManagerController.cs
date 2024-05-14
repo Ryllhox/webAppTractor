@@ -84,7 +84,7 @@ namespace WebApplication2.Controllers
             };
 
             _context.CommercialOffers.Add(offer);
-            order.Status = "Processed";
+            order.Status = "Completed";
             _context.SaveChanges();
 
             return RedirectToAction("Index", "Manager");

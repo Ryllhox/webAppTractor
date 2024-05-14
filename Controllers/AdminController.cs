@@ -139,25 +139,65 @@ namespace WebApplication2.Controllers
         [HttpGet]
         public IActionResult EditProduct(int id)
         {
-            var product = _context.Products.FirstOrDefault(p => p.Id == id);
+            var product = _context.Products.Find(id);
             if (product == null)
             {
                 return NotFound();
             }
+
+            var categories = _context.Categories.ToList();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name", product.CategoryId);
+            // Передаем текущий путь к изображению в ViewBag
+            ViewBag.ImagePath = product.ImagePath;
+
             return View(product);
         }
 
         [HttpPost]
-        public IActionResult EditProduct(Product product)
+        public IActionResult EditProduct(Product product, IFormFile? imageFile)
         {
             if (ModelState.IsValid)
             {
+                if (imageFile != null && imageFile.Length > 0)
+                {
+                    string uniqueFileName = UploadImage(imageFile);
+                    if (uniqueFileName != null)
+                    {
+                        // Удаляем старое изображение, если оно существует
+                        if (!string.IsNullOrEmpty(product.ImagePath))
+                        {
+                            string oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", product.ImagePath.TrimStart('/'));
+                            if (System.IO.File.Exists(oldImagePath))
+                            {
+                                System.IO.File.Delete(oldImagePath);
+                            }
+                        }
+
+                        product.ImagePath = Path.Combine("/images", uniqueFileName);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("imageFile", "Failed to upload image.");
+                    }
+                }
+
                 _context.Update(product);
                 _context.SaveChanges();
-                return RedirectToAction("Products");
+
+                return RedirectToAction("Products", "Admin");
             }
+
+            var categories = _context.Categories.ToList();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name", product.CategoryId);
+
+            // Передаем текущий путь к изображению в ViewBag
+            ViewBag.ImagePath = product.ImagePath;
+
             return View(product);
         }
+
+
+
 
         // Страница для удаления продукта
         public IActionResult DeleteProduct(int id)

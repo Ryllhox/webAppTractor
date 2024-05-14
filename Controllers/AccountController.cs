@@ -50,7 +50,7 @@ namespace WebApplication2.Controllers
             {
                 return RedirectToAction("Index", "Manager");
             }
-            else if (user.Role == "Admin")
+            else if (user.Role == "Administrator")
             {
                 return RedirectToAction("Index", "Admin");
             }

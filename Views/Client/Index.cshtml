@@ -4,14 +4,33 @@
     ViewData["Title"] = "Client Dashboard";
 }
 
-<h1>Велкам, Клиент!</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center mb-5">Добро пожаловать, Клиент!</h1>
+        </div>
+    </div>
 
-<h2>Категории</h2>
-<ul>
-    @foreach (var category in Model)
-    {
-        <li>
-            <a asp-action="Products" asp-controller="Client" asp-route-categoryId="@category.Id">@category.Name</a>
-        </li>
-    }
-</ul>
+    <div class="row">
+        @foreach (var category in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card shadow">
+                    @if (category.Name == "Тракторы")
+                    {
+                        <img class="card-img-top" src="@Url.Content("~/images/tractorCategory.jpg")" alt="Тракторы" style="height: auto; width: 100%; aspect-ratio: 10/10;">
+                    }
+                    else if (category.Name == "Специальная техника")
+                    {
+                        <img class="card-img-top" src="@Url.Content("~/images/specialTechnics.jpg")" alt="Спецтехника" style="height: auto; width: 100%; aspect-ratio: 10/10;">
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@category.Name</h5>
+                        <a href="@Url.Action("Products", "Client", new { categoryId = category.Id })" class="btn btn-primary">Просмотреть</a>
+                    </div>
+                </div>
+            </div>
+        }
+
+    </div>
+</div>

@@ -2,33 +2,41 @@
 
 <h2>Products</h2>
 
-<p>
-    <a asp-controller="Admin" asp-action="AddProduct">Add Product</a>
-</p>
+<div class="row">
+    <div class="col-md-12">
+        <a asp-controller="Admin" asp-action="AddProduct" class="btn btn-primary mb-3">Add Product</a>
+    </div>
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Power</th>
-            <th>Price</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var product in Model)
-        {
-            <tr>
-                <td>@product.Id</td>
-                <td>@product.Name</td>
-                <td>@product.Power</td>
-                <td>@product.Price</td>
-                <td>
-                    <a asp-controller="Admin" asp-action="EditProduct" asp-route-id="@product.Id">Edit</a> |
-                    <a asp-controller="Admin" asp-action="DeleteProduct" asp-route-id="@product.Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Power</th>
+                        <th>Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in Model)
+                    {
+                        <tr>
+                            <td>@product.Id</td>
+                            <td>@product.Name</td>
+                            <td>@product.Power</td>
+                            <td>@product.Price</td>
+                            <td>
+                                <a asp-controller="Admin" asp-action="EditProduct" asp-route-id="@product.Id" class="btn btn-primary btn-sm">Edit</a>
+                                <a asp-controller="Admin" asp-action="DeleteProduct" asp-route-id="@product.Id" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

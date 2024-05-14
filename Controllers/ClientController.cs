@@ -46,6 +46,7 @@ namespace WebApplication2.Controllers
             ViewBag.ProductName = product.Name;
             ViewBag.ProductPrice = product.Price;
             ViewBag.ProductOptions = _context.ProductOptions.Where(po => po.ProductId == id).ToList();
+            ViewBag.ImagePath = product.ImagePath;
 
             return View();
         }

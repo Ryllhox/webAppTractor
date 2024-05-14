@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\images\specialTechnics.jpg" />
+    <Content Remove="wwwroot\images\tractorCategory.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="DocX" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.4" />
@@ -24,7 +29,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\images\" />
+    <Resource Include="wwwroot\images\specialTechnics.jpg" />
+    <Resource Include="wwwroot\images\tractorCategory.jpg" />
   </ItemGroup>
 
 </Project>

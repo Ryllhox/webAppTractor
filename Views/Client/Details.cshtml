@@ -2,22 +2,34 @@
     ViewData["Title"] = "Product Details";
 }
 
-<h2>@ViewBag.ProductName</h2>
-<p>Price: @ViewBag.ProductPrice</p>
+<div class="row">
+	<div class="col-md-4">
+		@if (!string.IsNullOrEmpty(ViewBag.ImagePath))
+		{
+			<img src="@Url.Content(ViewBag.ImagePath)" alt="@ViewBag.Name" class="img-fluid shadow" />
+		}
+	</div>
 
-<h3>Additional Options</h3>
-<form id="orderForm" asp-action="Order" asp-controller="Client">
-    <input type="hidden" name="productId" value="@ViewBag.ProductId" />
-    <select name="optionIds" multiple>
-        @foreach (var option in ViewBag.ProductOptions)
-        {
-            <option value="@option.Id" data-price="@option.Price">@option.Name - @option.Price</option>
-        }
-    </select>
-    <br /><br />
-    <p>Total Price: <span id="totalPrice">@ViewBag.ProductPrice</span></p>
-    <input type="submit" value="Order" />
-</form>
+    <div class="col-md-8">
+        <h2>@ViewBag.ProductName</h2>
+        <p>Price: @ViewBag.ProductPrice</p>
+
+        <h3>Additional Options</h3>
+        <form id="orderForm" asp-action="Order" asp-controller="Client">
+            <input type="hidden" name="productId" value="@ViewBag.ProductId" />
+            <select name="optionIds" multiple class="form-control">
+                @foreach (var option in ViewBag.ProductOptions)
+                {
+                    <option value="@option.Id" data-price="@option.Price">@option.Name - @option.Price</option>
+                }
+            </select>
+            <br />
+            <p>Total Price: <span id="totalPrice">@ViewBag.ProductPrice</span></p>
+            <button type="submit" class="btn btn-primary shadow">Order</button>
+        </form>
+    </div>
+    
+</div>
 
 @section Scripts
 {

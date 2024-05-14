@@ -4,21 +4,27 @@
     ViewData["Title"] = "Products";
 }
 
-<h2>Продукты в @ViewBag.CategoryName</h2>
-<ul>
+<div class="row">
     @foreach (var product in Model)
     {
-        <li>
-            @if (!string.IsNullOrEmpty(product.ImagePath))
-            {
-                <img src="@Url.Content($"{product.ImagePath}")" alt="@product.Name" width="100" />
-            }
-            <strong>@product.Name</strong><br />
-            Price: @product.Price<br />
-            Power: @product.Power<br />
-            Availability: @product.Availability
-            <br /><br />
-            <a asp-action="Details" asp-controller="Client" asp-route-id="@product.Id">Детали</a>
-        </li>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow">
+                @if (!string.IsNullOrEmpty(product.ImagePath))
+                {
+                    <img class="card-img-top" src="@Url.Content($"{product.ImagePath}")" alt="@product.Name">
+                }
+                <div class="card-body">
+                    <h5 class="card-title">@product.Name</h5>
+                    <p class="card-text">
+                        <strong>Price:</strong> @product.Price<br />
+                        <strong>Power:</strong> @product.Power<br />
+                        <strong>Availability:</strong> @product.Availability
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <a href="@Url.Action("Details", "Client", new { id = product.Id })" class="btn btn-primary">Details</a>
+                </div>
+            </div>
+        </div>
     }
-</ul>
+</div>
