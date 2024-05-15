@@ -1,24 +1,24 @@
 ﻿@model User
 
-<h2>Edit User</h2>
+<h2>Редактирование пользователя</h2>
 
 <form asp-action="EditUser" method="post">
     <input type="hidden" asp-for="Id" />
 
     <div class="form-group">
-        <label asp-for="FirstName">First Name:</label>
+        <label asp-for="FirstName">Имя:</label>
         <input asp-for="FirstName" class="form-control" />
         <span asp-validation-for="FirstName" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="LastName">Last Name:</label>
+        <label asp-for="LastName">Фамилия:</label>
         <input asp-for="LastName" class="form-control" />
         <span asp-validation-for="LastName" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Patronymic">Patronymic:</label>
+        <label asp-for="Patronymic">Отчество:</label>
         <input asp-for="Patronymic" class="form-control" />
         <span asp-validation-for="Patronymic" class="text-danger"></span>
     </div>
@@ -30,19 +30,19 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="Phone">Phone:</label>
+        <label asp-for="Phone">Телефон:</label>
         <input asp-for="Phone" class="form-control" />
         <span asp-validation-for="Phone" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Password">Password:</label>
+        <label asp-for="Password">Пароль:</label>
         <input asp-for="Password" class="form-control" />
         <span asp-validation-for="Password" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Role">Role:</label>
+        <label asp-for="Role">Роль:</label>
         <select asp-for="Role" class="form-control">
             <option value="Client">Клиент</option>
             <option value="Manager">Менеджер</option>
@@ -51,6 +51,6 @@
         <span asp-validation-for="Role" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a asp-action="Users" class="btn btn-secondary">Cancel</a>
+    <button type="submit" class="btn btn-primary mt-2">Сохранить</button>
+    <a asp-action="Users" class="btn btn-secondary mt-2">Отмена</a>
 </form>

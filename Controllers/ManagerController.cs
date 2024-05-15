@@ -44,7 +44,7 @@ namespace WebApplication2.Controllers
             ViewBag.Orders = orders;
             ViewBag.Customers = customers;
 
-            return View("~/Views/Manager/Index.cshtml");
+            return View("Index", "Manager");
         }
 
         public IActionResult CreateOffer(int id)
@@ -63,8 +63,10 @@ namespace WebApplication2.Controllers
                 return RedirectToAction("Index");
             }
 
+            // Получаем информацию о пользователе
+            var customer = _context.Users.FirstOrDefault(u => u.Id == order.CustomerId);
             // Создаем документ Word с информацией по заказу
-            var doc = CreateOfferDocument(order);
+            var doc = CreateOfferDocument(order, customer);
 
             // Создаем папку для сохранения файла в папке загрузки, если она не существует
             string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -84,62 +86,95 @@ namespace WebApplication2.Controllers
             };
 
             _context.CommercialOffers.Add(offer);
-            order.Status = "Completed";
+            order.Status = "Выполнено";
             _context.SaveChanges();
 
             return RedirectToAction("Index", "Manager");
         }
 
         // Метод для создания документа Word с информацией по заказу
-        private DocX CreateOfferDocument(Order order)
+        private DocX CreateOfferDocument(Order order, User customer)
         {
             DocX doc = DocX.Create(Path.Combine(Directory.GetCurrentDirectory(), "temp.docx"));
 
             // Заголовок документа
-            doc.InsertParagraph($"Commercial Offer for Order #{order.Id}")
+            doc.InsertParagraph($"Коммерческое предложение для Заказа #{order.Id}")
                 .FontSize(16d)
                 .Bold()
                 .Alignment = Alignment.center;
 
             // Информация о заказе
-            doc.InsertParagraph($"Date: {DateTime.UtcNow}")
+            doc.InsertParagraph($"Дата: {order.Date.ToShortDateString()}")
                 .FontSize(12d)
                 .Bold();
-            doc.InsertParagraph($"Order ID: {order.Id}")
+            doc.InsertParagraph($"КОД заказа: {order.Id}")
                 .FontSize(12d);
-            doc.InsertParagraph($"Status: {order.Status}")
+            doc.InsertParagraph($"Статус: {order.Status}")
+                .FontSize(12d);
+
+            // Информация о покупателе
+            doc.InsertParagraph($"Имя: {customer.FirstName} {customer.LastName} {customer.Patronymic}")
+                .FontSize(12d);
+            doc.InsertParagraph($"Телефон: {customer.Phone}")
+                .FontSize(12d);
+            doc.InsertParagraph($"Электронная почта: {customer.Email}")
                 .FontSize(12d);
 
             // Таблица с информацией о продуктах
-            Table productsTable = doc.AddTable(1, 4);
+            Table productsTable = doc.AddTable(1, 5);
             productsTable.Design = TableDesign.LightShadingAccent1;
             productsTable.Alignment = Alignment.left;
             productsTable.AutoFit = AutoFit.Contents;
-            productsTable.Rows[0].Cells[0].Paragraphs.First().Append("Product");
-            productsTable.Rows[0].Cells[1].Paragraphs.First().Append("Quantity");
-            productsTable.Rows[0].Cells[2].Paragraphs.First().Append("Options");
-            productsTable.Rows[0].Cells[3].Paragraphs.First().Append("Total Price");
+            productsTable.Rows[0].Cells[0].Paragraphs.First().Append("Наименование");
+            productsTable.Rows[0].Cells[1].Paragraphs.First().Append("Количество");
+            productsTable.Rows[0].Cells[2].Paragraphs.First().Append("Цена за единицу");
+            productsTable.Rows[0].Cells[3].Paragraphs.First().Append("Опции");
+            productsTable.Rows[0].Cells[4].Paragraphs.First().Append("Общая цена");
 
             // Заполнение таблицы
-            string[] products = order.Products.Split(';');
-            string[] quantities = order.Quantity.ToString().Split(';');
-            string[] options = order.Options.Split(';');
-            string[] prices = order.TotalPrice.ToString().Split(';');
-            for (int i = 0; i < products.Length; i++)
+            var productsAndQuantities = order.Products.Split(';');
+            decimal totalPrice = 0;
+            for (int i = 0; i < productsAndQuantities.Length; i++)
             {
+                string productAndQuantity = productsAndQuantities[i];
+                string[] productInfo = productAndQuantity.Split(':');
+                string productName = productInfo[0].Trim();
+                int quantity = 1;
+                if (productInfo.Length > 1)
+                {
+                    quantity = int.Parse(productInfo[1].Trim());
+                }
+
+                // Находим продукт и его цену
+                var product = _context.Products.FirstOrDefault(p => p.Name == productName);
+                decimal productPrice = product?.Price ?? 0;
+
+                // Находим опции и их цены
+                var options = order.Options.Split(';')[i].Split(',');
+                decimal optionsTotalPrice = 0;
+                string optionsList = string.Join(", ", options.Select(o => $"{o} ({_context.ProductOptions.FirstOrDefault(po => po.Name == o)?.Price ?? 0} руб.)"));
+                foreach (string option in options)
+                {
+                    decimal optionPrice = _context.ProductOptions.FirstOrDefault(po => po.Name == option)?.Price ?? 0;
+                    optionsTotalPrice += optionPrice;
+                }
+
+                // Вычисляем общую цену для продукта с учетом опций
+                decimal productTotalPrice = (productPrice + optionsTotalPrice) * quantity;
+                totalPrice += productTotalPrice;
+
                 productsTable.InsertRow();
-                productsTable.Rows[i + 1].Cells[0].Paragraphs.First().Append(products[i]);
-                productsTable.Rows[i + 1].Cells[1].Paragraphs.First().Append(quantities[i]);
-                productsTable.Rows[i + 1].Cells[2].Paragraphs.First().Append(options[i]);
-                productsTable.Rows[i + 1].Cells[3].Paragraphs.First().Append(prices[i]);
+                productsTable.Rows[i + 1].Cells[0].Paragraphs.First().Append(productName);
+                productsTable.Rows[i + 1].Cells[1].Paragraphs.First().Append(quantity.ToString());
+                productsTable.Rows[i + 1].Cells[2].Paragraphs.First().Append(productPrice.ToString("F2"));
+                productsTable.Rows[i + 1].Cells[3].Paragraphs.First().Append(optionsList);
+                productsTable.Rows[i + 1].Cells[4].Paragraphs.First().Append(productTotalPrice.ToString("F2"));
             }
 
             doc.InsertTable(productsTable);
 
             // Итоговая цена
-            doc.InsertParagraph($"Total Price: {order.TotalPrice}")
-                .FontSize(12d);
-            doc.InsertParagraph($"Customer: {order.CustomerId}")
+            doc.InsertParagraph($"Итоговая цена: {totalPrice.ToString("F2")} руб.")
                 .FontSize(12d);
 
             return doc;
@@ -153,7 +188,7 @@ namespace WebApplication2.Controllers
                 return NotFound();
             }
 
-            order.Status = "Rejected";
+            order.Status = "Отклонено";
             _context.SaveChanges();
 
             return RedirectToAction("Index", "Manager");
@@ -167,7 +202,7 @@ namespace WebApplication2.Controllers
                 return NotFound();
             }
 
-            order.Status = "Processing";
+            order.Status = "В процессе";
             _context.SaveChanges();
 
             return RedirectToAction("Index", "Manager");

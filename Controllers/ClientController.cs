@@ -68,6 +68,7 @@ namespace WebApplication2.Controllers
             ViewBag.ProductId = id;
             ViewBag.ProductName = product.Name;
             ViewBag.ProductPrice = product.Price;
+            ViewBag.Power = product.Power;
             ViewBag.ProductOptions = _context.ProductOptions.Where(po => po.ProductId == id).ToList();
             ViewBag.ImagePath = product.ImagePath;
 
@@ -76,7 +77,7 @@ namespace WebApplication2.Controllers
 
 
         [HttpPost]
-        public IActionResult Order(int productId, int[] optionIds)
+        public IActionResult Order(int productId, string selectedOptionIds)
         {
             var product = _context.Products.FirstOrDefault(p => p.Id == productId);
             if (product == null)
@@ -91,6 +92,13 @@ namespace WebApplication2.Controllers
                 return NotFound();
             }
 
+            // Преобразуем строку selectedOptionIds в массив целых чисел
+            var optionIds = new List<int>();
+            if (!string.IsNullOrEmpty(selectedOptionIds))
+            {
+                optionIds = selectedOptionIds.Split(',').Select(int.Parse).ToList();
+            }
+
             // Получаем выбранные опции
             var options = _context.ProductOptions.Where(o => optionIds.Contains(o.Id)).ToList();
             decimal totalOptionPrice = options.Sum(o => o.Price);
@@ -101,7 +109,7 @@ namespace WebApplication2.Controllers
             // Создаем новый заказ
             var order = new Order
             {
-                Status = "Pending",
+                Status = "Обработка",
                 Date = DateTime.UtcNow,
                 Products = product.Name,
                 Quantity = 1, // Пока что предположим, что всегда заказывается одна единица товара
@@ -115,6 +123,7 @@ namespace WebApplication2.Controllers
 
             return RedirectToAction("Index", "Client");
         }
+
 
     }
 }

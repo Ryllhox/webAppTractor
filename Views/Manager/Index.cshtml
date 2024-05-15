@@ -1,8 +1,8 @@
 ﻿@{
-    ViewData["Title"] = "Orders";
+    ViewData["Title"] = "Панель менеджера";
 }
 
-<h2 class="text-center mb-5">Orders</h2>
+<h2 class="text-center mb-5">Заказы</h2>
 
 <div class="row">
     <div class="col-md-12">
@@ -10,15 +10,15 @@
             <table class="table table-striped table-bordered text-center">
                 <thead>
                     <tr>
-                        <th>Id</th>
-                        <th>Status</th>
-                        <th>Date</th>
-                        <th>Products</th>
-                        <th>Quantity</th>
-                        <th>Options</th>
-                        <th>Total Price</th>
-                        <th>Customer</th>
-                        <th>Action</th>
+                        <th>КОД</th>
+                        <th>Статус</th>
+                        <th>Дата</th>
+                        <th>Товар</th>
+                        <th>Количество</th>
+                        <th>Опции</th>
+                        <th>Итоговая цена</th>
+                        <th>Покупатель</th>
+                        <th>Действия</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,17 +34,17 @@
                             <td>@order.TotalPrice</td>
                             <td>@order.CustomerId</td>
                             <td>
-                                @if (order.Status!= "Completed" && order.Status!= "Rejected")
+                                @if (order.Status != "Выполнено" && order.Status != "Отклонено")
                                 {
-                                    <button type="button" class="btn btn-primary btn-sm me-2 mb-1" asp-controller="Manager" asp-action="CreateOffer" asp-route-id="@order.Id">Create Offer</button>
+                                    <a class="btn btn-primary btn-sm me-2 mb-1" asp-controller="Manager" asp-action="CreateOffer" asp-route-id="@order.Id">Create Offer</a>
                                 }
-                                @if (order.Status == "Pending")
+                                @if (order.Status == "Обработка" || order.Status == "В процессе")
                                 {
-                                    <button type="button" class="btn btn-danger btn-sm me-2 mb-1" asp-controller="Manager" asp-action="RejectOrder" asp-route-id="@order.Id">Reject</button>
+                                    <a class="btn btn-danger btn-sm me-2 mb-1" asp-controller="Manager" asp-action="RejectOrder" asp-route-id="@order.Id">Reject</a>
                                 }
-                                @if (order.Status == "Pending" || order.Status == "Processing")
+                                @if (order.Status == "Обработка")
                                 {
-                                    <button type="button" class="btn btn-success btn-sm mb-1" asp-controller="Manager" asp-action="MarkAsProcessing" asp-route-id="@order.Id">Mark as Processing</button>
+                                    <a class="btn btn-success btn-sm mb-1" asp-controller="Manager" asp-action="MarkAsProcessing" asp-route-id="@order.Id">Mark as Processing</a>
                                 }
                             </td>
                         </tr>
@@ -59,17 +59,16 @@
     <div class="col-md-12">
         <form class="mb-5" asp-controller="Manager" asp-action="Orders" method="get">
             <div class="form-group">
-                <label for="status" class="form-label">Sort by status:</label>
+                <label for="status" class="form-label">Отсортировать по статусу:</label>
                 <select name="status" id="status" class="form-select">
-                    <option value="">All</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Processed">Processed</option>
-                    <option value="Processing">Processing</option>
-                    <option value="Completed">Completed</option>
-                    <option value="Rejected">Rejected</option>
+                    <option value="">Все</option>
+                    <option value="Обработка">Обработка</option>
+                    <option value="В процессе">В процессе</option>
+                    <option value="Выполнено">Выполнено</option>
+                    <option value="Отклонено">Отклонено</option>
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary">Sort</button>
+            <button type="submit" class="btn btn-primary mt-2">Отсортировать</button>
         </form>
     </div>
 </div>

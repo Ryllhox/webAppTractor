@@ -22,10 +22,10 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Домой</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Прайваси</a>
                         </li>
                     </ul>
                     @if (User.Identity.IsAuthenticated)
@@ -33,14 +33,14 @@
                         <div class="user-info">
                             <span>Welcome, @User.Identity.Name! (Role: @User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value)</span>
                             <form id="logoutForm" asp-action="Logout" asp-controller="Account" method="post">
-                                <button type="submit" class="btn btn-link">Logout</button>
+                                <button type="submit" class="btn btn-link">Выйти</button>
                             </form>
                         </div>
                     }
                     else
                     {
                         <div>
-                            <a asp-action="Login" asp-controller="Account" class="btn btn-link">Login</a>
+                            <a asp-action="Login" asp-controller="Account" class="btn btn-link">Войти</a>
                         </div>
                     }
                 </div>
@@ -55,7 +55,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2024 - ООО "Автоцентр" - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2024 - ООО "Автоцентр" - <a asp-area="" asp-controller="Home" asp-action="Privacy">Прайваси</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

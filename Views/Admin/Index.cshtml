@@ -1,28 +1,28 @@
 ﻿@{
-    ViewData["Title"] = "Admin Dashboard";
+    ViewData["Title"] = "Панель администратора";
 }
 
-<h2 class="text-center mb-5">Admin Dashboard</h2>
+<h2 class="text-center mb-5">Панель администратора</h2>
 
 <div class="d-flex justify-content-center">
     <div class="row">
         <div class="col-md-8 col-lg-6 mb-4">
-            <div class="card h-100">
-                <img class="card-img-top" src="@Url.Content("~/images/Users.jpg")" alt="Users" style="height: 30vh; width: 100%; object-fit: cover;">
+            <div class="card h-100 shadow">
+                <img class="card-img-top" src="@Url.Content("~/images/Users.jpg")" alt="Пользователи" style="height: 30vh; width: 100%; object-fit: cover;">
                 <div class="card-body">
-                    <h5 class="card-title">Users Management</h5>
-                    <p class="card-text">Manage users, their roles, and permissions.</p>
-                    <a href="@Url.Action("Users", "Admin")" class="btn btn-primary">Go to Users</a>
+                    <h5 class="card-title">Управление пользователями</h5>
+                    <p class="card-text">Управляйте пользователями, их ролями и разрешениями.</p>
+                    <a href="@Url.Action("Users", "Admin")" class="btn btn-primary">Перейти к пользователям</a>
                 </div>
             </div>
         </div>
         <div class="col-md-8 col-lg-6 mb-4">
-            <div class="card h-100">
-                <img class="card-img-top" src="@Url.Content("~/images/Products.jpg")" alt="Products" style="height: 30vh; width: 100%; object-fit: cover;">
+            <div class="card h-100 shadow">
+                <img class="card-img-top" src="@Url.Content("~/images/Products.jpg")" alt="Товары" style="height: 30vh; width: 100%; object-fit: cover;">
                 <div class="card-body">
-                    <h5 class="card-title">Products Management</h5>
-                    <p class="card-text">Manage products, categories, and availability.</p>
-                    <a href="@Url.Action("Products", "Admin")" class="btn btn-primary">Go to Products</a>
+                    <h5 class="card-title">Управление товарами</h5>
+                    <p class="card-text">Управляйте товарами, категориями и доступностью.</p>
+                    <a href="@Url.Action("Products", "Admin")" class="btn btn-primary">Перейти к товарам</a>
                 </div>
             </div>
         </div>

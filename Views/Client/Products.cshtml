@@ -1,7 +1,7 @@
 ﻿@model List<Product>
 
 @{
-    ViewData["Title"] = "Products";
+    ViewData["Title"] = "Товары";
 }
 
 <div class="row mb-4">
@@ -10,31 +10,31 @@
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="minPrice">Min Price:</label>
+                        <label for="minPrice">Мин. цена:</label>
                         <input type="number" class="form-control" name="minPrice" id="minPrice" />
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="maxPrice">Max Price:</label>
+                        <label for="maxPrice">Макс. цена:</label>
                         <input type="number" class="form-control" name="maxPrice" id="maxPrice" />
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="minPower">Min Power:</label>
+                        <label for="minPower">Мин. мощность:</label>
                         <input type="number" class="form-control" name="minPower" id="minPower" />
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="maxPower">Max Power:</label>
+                        <label for="maxPower">Макс. мощность:</label>
                         <input type="number" class="form-control" name="maxPower" id="maxPower" />
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Filter</button>
+            <div class="form-group pt-4">
+                <button type="submit" class="btn btn-primary">Фильтровать</button>
             </div>
         </form>
     </div>
@@ -52,13 +52,13 @@
                 <div class="card-body">
                     <h5 class="card-title">@product.Name</h5>
                     <p class="card-text">
-                        <strong>Price:</strong> @product.Price<br />
-                        <strong>Power:</strong> @product.Power<br />
-                        <strong>Availability:</strong> @product.Availability
+                        <strong>Цена:</strong> @product.Price<br />
+                        <strong>Мощность:</strong> @product.Power<br />
+                        <strong>Доступность:</strong> @product.Availability
                     </p>
                 </div>
                 <div class="card-footer">
-                    <a href="@Url.Action("Details", "Client", new { id = product.Id })" class="btn btn-primary">Details</a>
+                    <a href="@Url.Action("Details", "Client", new { id = product.Id })" class="btn btn-primary">Подробнее</a>
                 </div>
             </div>
         </div>
