@@ -32,19 +32,19 @@
                             <td>@order.Quantity</td>
                             <td>@order.Options</td>
                             <td>@order.TotalPrice</td>
-                            <td>@order.CustomerId</td>
+                            <td>@ViewBag.Customers[order.CustomerId]</td>
                             <td>
                                 @if (order.Status != "Выполнено" && order.Status != "Отклонено")
                                 {
-                                    <a class="btn btn-primary btn-sm me-2 mb-1" asp-controller="Manager" asp-action="CreateOffer" asp-route-id="@order.Id">Create Offer</a>
+                                    <a class="btn btn-primary btn-sm me-2 mb-1" asp-controller="Manager" asp-action="CreateOffer" asp-route-id="@order.Id">Создать предложение</a>
                                 }
                                 @if (order.Status == "Обработка" || order.Status == "В процессе")
                                 {
-                                    <a class="btn btn-danger btn-sm me-2 mb-1" asp-controller="Manager" asp-action="RejectOrder" asp-route-id="@order.Id">Reject</a>
+                                    <a class="btn btn-danger btn-sm me-2 mb-1" asp-controller="Manager" asp-action="RejectOrder" asp-route-id="@order.Id">Отклонить</a>
                                 }
                                 @if (order.Status == "Обработка")
                                 {
-                                    <a class="btn btn-success btn-sm mb-1" asp-controller="Manager" asp-action="MarkAsProcessing" asp-route-id="@order.Id">Mark as Processing</a>
+                                    <a class="btn btn-success btn-sm mb-1" asp-controller="Manager" asp-action="MarkAsProcessing" asp-route-id="@order.Id">Отметить выполняющимся</a>
                                 }
                             </td>
                         </tr>

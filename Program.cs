@@ -47,10 +47,6 @@ namespace WebApplication2
                 app.UseHsts();
             }
 
-            // если чо удалить ---------------
-            app.UseExceptionHandler("/Error"); // Middleware для обработки ошибок
-
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

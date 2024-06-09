@@ -31,6 +31,14 @@ namespace WebApplication2.Controllers
             // Фильтрация продуктов по категории
             var products = _context.Products.Where(p => p.CategoryId == categoryId);
 
+            // Вычисление минимальной и максимальной цены
+            decimal minProductPrice = products.Min(p => p.Price);
+            decimal maxProductPrice = products.Max(p => p.Price);
+
+            // Вычисление минимальной и максимальной мощности
+            int minProductPower = products.Min(p => p.Power);
+            int maxProductPower = products.Max(p => p.Power);
+
             // Фильтрация по цене
             if (minPrice.HasValue)
             {
@@ -52,6 +60,12 @@ namespace WebApplication2.Controllers
             }
 
             ViewBag.CategoryName = category.Name;
+            ViewBag.MinProductPrice = minProductPrice;
+            ViewBag.MaxProductPrice = maxProductPrice;
+            ViewBag.MinProductPower = minProductPower;
+            ViewBag.MaxProductPower = maxProductPower;
+            ViewBag.CurrentCategoryId = categoryId;
+
             return View(products.ToList());
         }
 

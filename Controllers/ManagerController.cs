@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using WebApplication2.Models;
@@ -21,7 +22,10 @@ namespace WebApplication2.Controllers
         public IActionResult Index()
         {
             var orders = _context.Orders.ToList();
+            var customersIDs = orders.Select(o => o.CustomerId).Distinct().ToList();
+            var customers = _context.Users.Where(u => customersIDs.Contains(u.Id)).ToDictionary(u => u.Id, u => $"{u.FirstName} {u.LastName}");
             ViewBag.Orders = orders; // установите список заказов в ViewBag
+            ViewBag.Customers = customers;
             return View();
         }
 
@@ -38,14 +42,17 @@ namespace WebApplication2.Controllers
 
             // Загрузка данных о клиентах для каждого заказа
             var customerIds = orders.Select(o => o.CustomerId).Distinct().ToList();
-            var customers = _context.Users.Where(u => customerIds.Contains(u.Id)).ToDictionary(u => u.Id, u => u);
+            var customers = _context.Users
+                .Where(u => customerIds.Contains(u.Id))
+                .ToDictionary(u => u.Id, u => $"{u.FirstName} {u.LastName}"); // Сохраняем ФИО в словаре
 
             ViewBag.Status = status;
             ViewBag.Orders = orders;
             ViewBag.Customers = customers;
 
-            return View("Index", "Manager");
+            return View("Index"); // Исправлено, чтобы возвращать представление "Index"
         }
+
 
         public IActionResult CreateOffer(int id)
         {
