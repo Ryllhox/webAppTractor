@@ -35,6 +35,12 @@
     </div>
 
     <div class="form-group">
+        <label asp-for="CategoryId">Категория:</label>
+        <select asp-for="CategoryId" class="form-select" asp-items="ViewBag.Categories"></select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
         <label>Текущее изображение:</label><br />
         @if (!string.IsNullOrEmpty(Model.ImagePath))
         {
@@ -51,7 +57,6 @@
         <input type="file" name="imageFile" class="form-control" />
         <span asp-validation-for="ImagePath" class="text-danger"></span>
     </div>
-
 
     <button type="submit" class="btn btn-primary mt-2">Сохранить</button>
 </form>

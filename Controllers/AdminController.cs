@@ -149,13 +149,16 @@ namespace WebApplication2.Controllers
                 return NotFound();
             }
 
+            // Загрузка категорий
             var categories = _context.Categories.ToList();
             ViewBag.Categories = new SelectList(categories, "Id", "Name", product.CategoryId);
-            // Передаем текущий путь к изображению в ViewBag
+
+            // Передаем текущий путь к изображению в ViewBag (необязательно, но может быть полезно для проверки)
             ViewBag.ImagePath = product.ImagePath;
 
             return View(product);
         }
+
 
         [HttpPost]
         public IActionResult EditProduct(Product product, IFormFile? imageFile)
@@ -185,20 +188,20 @@ namespace WebApplication2.Controllers
                     }
                 }
 
+                // Обновляем запись в базе данных
                 _context.Update(product);
                 _context.SaveChanges();
 
                 return RedirectToAction("Products", "Admin");
             }
 
+            // Если модель не прошла валидацию, нужно заново заполнить ViewBag.Categories
             var categories = _context.Categories.ToList();
             ViewBag.Categories = new SelectList(categories, "Id", "Name", product.CategoryId);
 
-            // Передаем текущий путь к изображению в ViewBag
-            ViewBag.ImagePath = product.ImagePath;
-
             return View(product);
         }
+
 
 
 
