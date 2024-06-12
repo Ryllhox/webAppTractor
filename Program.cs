@@ -12,11 +12,12 @@ namespace WebApplication2
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var connectionString = builder.Configuration.GetConnectionString("WebApplication2ContextConnection");
            
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddTransient<IUserService, UserService>();
-            builder.Services.AddDbContext<ApplicationDbContext>();
+            builder.Services.AddDbContext<ApplicationDbContext>(options=>options.UseNpgsql(connectionString));
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = "Cookies";

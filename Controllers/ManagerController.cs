@@ -13,10 +13,12 @@ namespace WebApplication2.Controllers
     public class ManagerController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ManagerController(ApplicationDbContext context)
+        public ManagerController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
@@ -74,16 +76,7 @@ namespace WebApplication2.Controllers
             var customer = _context.Users.FirstOrDefault(u => u.Id == order.CustomerId);
             // Создаем документ Word с информацией по заказу
             var doc = CreateOfferDocument(order, customer);
-
-            // Создаем папку для сохранения файла в папке загрузки, если она не существует
-            string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            string downloadFolder = Path.Combine(folderPath, "Downloads");
-
-            // Сохраняем документ в файл
-            string fileName = $"Offer_{order.Id}.docx";
-            string filePath = Path.Combine(downloadFolder, fileName);
-            doc.SaveAs(filePath);
-
+                     
             // Сохраняем информацию об оффере в базу данных
             var offer = new CommercialOffer
             {
@@ -95,6 +88,21 @@ namespace WebApplication2.Controllers
             _context.CommercialOffers.Add(offer);
             order.Status = "Выполнено";
             _context.SaveChanges();
+
+            // Создаем поток в памяти для хранения документа
+            using (var memoryStream = new MemoryStream())
+            {
+                // Сохраняем документ в поток
+                doc.SaveAs(memoryStream);
+
+                // Устанавливаем позицию потока на начало
+                memoryStream.Position = 0;
+
+                // Возвращаем файл клиенту
+                string fileName = $"Offer_{order.Id}.docx";
+                return File(memoryStream.ToArray(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", fileName);
+            }
+
 
             return RedirectToAction("Index", "Manager");
         }
@@ -116,8 +124,6 @@ namespace WebApplication2.Controllers
                 .Bold();
             doc.InsertParagraph($"КОД заказа: {order.Id}")
                 .FontSize(12d);
-            doc.InsertParagraph($"Статус: {order.Status}")
-                .FontSize(12d);
 
             // Информация о покупателе
             doc.InsertParagraph($"Имя: {customer.FirstName} {customer.LastName} {customer.Patronymic}")
@@ -127,16 +133,17 @@ namespace WebApplication2.Controllers
             doc.InsertParagraph($"Электронная почта: {customer.Email}")
                 .FontSize(12d);
 
-            // Таблица с информацией о продуктах
-            Table productsTable = doc.AddTable(1, 5);
+            // Таблица с информацией о продуктах и фотографиями
+            Table productsTable = doc.AddTable(1, 6); // Увеличиваем количество столбцов до 6
             productsTable.Design = TableDesign.LightShadingAccent1;
             productsTable.Alignment = Alignment.left;
             productsTable.AutoFit = AutoFit.Contents;
-            productsTable.Rows[0].Cells[0].Paragraphs.First().Append("Наименование");
-            productsTable.Rows[0].Cells[1].Paragraphs.First().Append("Количество");
-            productsTable.Rows[0].Cells[2].Paragraphs.First().Append("Цена за единицу");
-            productsTable.Rows[0].Cells[3].Paragraphs.First().Append("Опции");
-            productsTable.Rows[0].Cells[4].Paragraphs.First().Append("Общая цена");
+            productsTable.Rows[0].Cells[0].Paragraphs.First().Append("Фотография"); // Добавляем столбец для фотографий
+            productsTable.Rows[0].Cells[1].Paragraphs.First().Append("Наименование");
+            productsTable.Rows[0].Cells[2].Paragraphs.First().Append("Количество");
+            productsTable.Rows[0].Cells[3].Paragraphs.First().Append("Цена за единицу");
+            productsTable.Rows[0].Cells[4].Paragraphs.First().Append("Опции");
+            productsTable.Rows[0].Cells[5].Paragraphs.First().Append("Общая цена");
 
             // Заполнение таблицы
             var productsAndQuantities = order.Products.Split(';');
@@ -170,12 +177,26 @@ namespace WebApplication2.Controllers
                 decimal productTotalPrice = (productPrice + optionsTotalPrice) * quantity;
                 totalPrice += productTotalPrice;
 
+                // Добавляем строку с данными о товаре
                 productsTable.InsertRow();
-                productsTable.Rows[i + 1].Cells[0].Paragraphs.First().Append(productName);
-                productsTable.Rows[i + 1].Cells[1].Paragraphs.First().Append(quantity.ToString());
-                productsTable.Rows[i + 1].Cells[2].Paragraphs.First().Append(productPrice.ToString("F2"));
-                productsTable.Rows[i + 1].Cells[3].Paragraphs.First().Append(optionsList);
-                productsTable.Rows[i + 1].Cells[4].Paragraphs.First().Append(productTotalPrice.ToString("F2"));
+                var newRow = productsTable.Rows[i + 1];
+                newRow.Cells[1].Paragraphs.First().Append(productName);
+                newRow.Cells[2].Paragraphs.First().Append(quantity.ToString());
+                newRow.Cells[3].Paragraphs.First().Append(productPrice.ToString("F2"));
+                newRow.Cells[4].Paragraphs.First().Append(optionsList);
+                newRow.Cells[5].Paragraphs.First().Append(productTotalPrice.ToString("F2"));
+
+                // Добавляем фотографию товара
+                if (product?.ImagePath != null && System.IO.File.Exists(Path.Combine(_webHostEnvironment.WebRootPath, product.ImagePath.TrimStart('/'))))
+                {
+                    string imagePath = Path.Combine(_webHostEnvironment.WebRootPath, product.ImagePath.TrimStart('/'));
+                    var picture = doc.AddImage(imagePath).CreatePicture(100, 100); // Задаем размеры изображения
+                    newRow.Cells[0].Paragraphs.First().AppendPicture(picture);
+                }
+                else
+                {
+                    newRow.Cells[0].Paragraphs.First().Append("Нет изображения");
+                }
             }
 
             doc.InsertTable(productsTable);
@@ -186,6 +207,7 @@ namespace WebApplication2.Controllers
 
             return doc;
         }
+
 
         public IActionResult RejectOrder(int id)
         {

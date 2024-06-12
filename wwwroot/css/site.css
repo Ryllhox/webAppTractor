@@ -24,3 +24,57 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.navbar-toggler-icon {
+    transition: all 0.3s ease-in-out;
+}
+
+    .navbar-toggler-icon:hover {
+        transform: rotate(90deg);
+    }
+
+.navbar-collapse {
+    transition: all 0.3s ease-in-out;
+}
+
+    .navbar-collapse.show {
+        transform: translateY(0);
+    }
+
+    .navbar-collapse.collapsing {
+        transform: translateY(-100%);
+    }
+
+.btn-link {
+    transition: all 0.3s ease-in-out;
+}
+
+    .btn-link:hover {
+        transform: scale(1.1);
+        color: #337ab7;
+    }
+
+.navbar {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.footer {
+    transition: all 0.3s ease-in-out;
+}
+
+    .footer:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+.btn-link {
+    transition: all 0.3s ease-in-out;
+    text-decoration: none;
+    color: #337ab7;
+}
+
+    .btn-link:hover {
+        transform: scale(1.1);
+        text-decoration: underline;
+        color: #557bb9;
+    }

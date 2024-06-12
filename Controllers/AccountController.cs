@@ -27,7 +27,7 @@ namespace WebApplication2.Controllers
 
             if (user == null)
             {
-                ModelState.AddModelError(string.Empty, "Invalid email or password");
+                ModelState.AddModelError(string.Empty, "Неверный e-mail или пароль");
                 return View();
             }
 
@@ -76,7 +76,7 @@ namespace WebApplication2.Controllers
 
             if (user == null)
             {
-                ModelState.AddModelError(string.Empty, "Email already exists");
+                ModelState.AddModelError(string.Empty, "Данный e-mail уже существует в системе");
                 return View();
             }
 

@@ -32,7 +32,19 @@
                             <td>@order.Quantity</td>
                             <td>@order.Options</td>
                             <td>@order.TotalPrice</td>
-                            <td>@ViewBag.Customers[order.CustomerId]</td>
+                            <td>
+                                @{
+                                    if (ViewBag.Customers.ContainsKey(order.CustomerId))
+                                    {
+                                        var customer = ViewBag.Customers[order.CustomerId];
+                                        <text>@customer</text>
+                                    }
+                                    else
+                                    {
+                                        <text>Пользователь удален</text>
+                                    }
+                                }
+                            </td>
                             <td>
                                 @if (order.Status != "Выполнено" && order.Status != "Отклонено")
                                 {

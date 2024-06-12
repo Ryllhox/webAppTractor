@@ -12,10 +12,8 @@ namespace WebApplication2.Models
         public DbSet<Order> Orders { get; set; }
         public DbSet<CommercialOffer> CommercialOffers { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            //подключения к базе данных PostgreSQL
-            optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=db_web2;Username=postgres;Password=123");
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        {            
         }
     }
 }

@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\images\Products.jpg" />
-    <Content Remove="wwwroot\images\specialTechnics.jpg" />
+    <Content Remove="wwwroot\images\specialTechn.jpg" />
     <Content Remove="wwwroot\images\tractorCategory.jpg" />
     <Content Remove="wwwroot\images\Users.jpg" />
   </ItemGroup>
@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <Resource Include="wwwroot\images\Products.jpg" />
-    <Resource Include="wwwroot\images\specialTechnics.jpg" />
+    <Resource Include="wwwroot\images\specialTechn.jpg" />
     <Resource Include="wwwroot\images\tractorCategory.jpg" />
     <Resource Include="wwwroot\images\Users.jpg" />
   </ItemGroup>

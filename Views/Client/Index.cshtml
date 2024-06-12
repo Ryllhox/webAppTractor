@@ -11,7 +11,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row justify-content-center">
         @foreach (var category in Model)
         {
             <div class="col-md-4 mb-4">
@@ -22,7 +22,7 @@
                     }
                     else if (category.Name == "Специальная техника")
                     {
-                        <img class="card-img-top" src="@Url.Content("~/images/specialTechnics.jpg")" alt="Спецтехника" style="height: auto; width: 100%; aspect-ratio: 10/10;">
+                        <img class="card-img-top" src="@Url.Content("~/images/specialTechn.jpg")" alt="Спецтехника" style="height: auto; width: 100%; aspect-ratio: 10/10;">
                     }
                     <div class="card-body">
                         <h5 class="card-title">@category.Name</h5>
